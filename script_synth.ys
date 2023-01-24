@@ -1,0 +1,26 @@
+ #!/bin/bash
+PDK=./skywater_130nm.lib
+#PDK=./freepdk_45nm.lib
+
+#yosys -l synth_core.log -p '
+#read_verilog *.v;
+#hierarchy -check -top mkccore_axi4;
+#proc; opt; fsm; opt; memory; opt;
+#techmap; opt;
+#dfflibmap -liberty $PDK;
+#abc -D 1000 -liberty $PDK;
+#clean;
+##show
+#write_verilog -noattr synth_core.yv
+#'
+#
+yosys -l synth_alu.log -p "
+read_verilog module_fn_alu.v;
+hierarchy -check -top module_fn_alu;
+proc; opt; fsm; opt; memory; opt;
+techmap; opt;
+dfflibmap -liberty $PDK ; 
+abc -D 1000 -liberty $PDK ;
+clean;
+write_verilog -noattr synth_alu.yv
+"

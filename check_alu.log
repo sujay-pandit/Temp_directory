@@ -1,0 +1,658 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Running command `
+
+	# gold design
+    read_verilog module_fn_alu.v
+    prep -top module_fn_alu
+    design -stash gold
+    
+	# gate design
+    read_verilog synth_alu.v
+	read_liberty  -ignore_miss_func /home/min/a/pandit8/Desktop/freepdk-45nm/stdcells.lib
+    prep -flatten -top module_fn_alu
+    design -stash gate
+    
+
+    # prove equivalence
+    design -copy-from gold -as gold module_fn_alu
+    design -copy-from gate -as gate module_fn_alu
+    equiv_make gold gate equiv
+    hierarchy -top equiv
+	show
+    equiv_simple  -v
+    equiv_status -assert
+' --
+
+1. Executing Verilog-2005 frontend: module_fn_alu.v
+Parsing Verilog input from `module_fn_alu.v' to AST representation.
+Generating RTLIL representation for module `\module_fn_alu'.
+Note: Assuming pure combinatorial block at module_fn_alu.v:232 in
+compliance with IEC 62142(E):2005 / IEEE Std. 1364.1(E):2002. Recommending
+use of @* instead of @(...) for better match of synthesis and simulation.
+Note: Assuming pure combinatorial block at module_fn_alu.v:303 in
+compliance with IEC 62142(E):2005 / IEEE Std. 1364.1(E):2002. Recommending
+use of @* instead of @(...) for better match of synthesis and simulation.
+Note: Assuming pure combinatorial block at module_fn_alu.v:317 in
+compliance with IEC 62142(E):2005 / IEEE Std. 1364.1(E):2002. Recommending
+use of @* instead of @(...) for better match of synthesis and simulation.
+Note: Assuming pure combinatorial block at module_fn_alu.v:341 in
+compliance with IEC 62142(E):2005 / IEEE Std. 1364.1(E):2002. Recommending
+use of @* instead of @(...) for better match of synthesis and simulation.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \module_fn_alu
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \module_fn_alu
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$module_fn_alu.v:341$64 in module module_fn_alu.
+Marked 1 switch rules as full_case in process $proc$module_fn_alu.v:317$61 in module module_fn_alu.
+Marked 1 switch rules as full_case in process $proc$module_fn_alu.v:303$58 in module module_fn_alu.
+Marked 1 switch rules as full_case in process $proc$module_fn_alu.v:232$57 in module module_fn_alu.
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_INIT pass (extract init attributes).
+
+2.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\module_fn_alu.$proc$module_fn_alu.v:341$64'.
+     1/2: $1\IF_fn_alu_fn_EQ_2_THEN_NOT_INV_NOT_fn_alu_op1__ETC___d309[0:0]
+     2/2: $0\IF_fn_alu_fn_EQ_2_THEN_NOT_INV_NOT_fn_alu_op1__ETC___d309[0:0]
+Creating decoders for process `\module_fn_alu.$proc$module_fn_alu.v:317$61'.
+     1/2: $1\final_output__h56[63:0]
+     2/2: $0\final_output__h56[63:0]
+Creating decoders for process `\module_fn_alu.$proc$module_fn_alu.v:303$58'.
+     1/2: $1\branch_taken__h48[0:0]
+     2/2: $0\branch_taken__h48[0:0]
+Creating decoders for process `\module_fn_alu.$proc$module_fn_alu.v:232$57'.
+     1/2: $1\shin__h52[63:0]
+     2/2: $0\shin__h52[63:0]
+
+2.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\module_fn_alu.\IF_fn_alu_fn_EQ_2_THEN_NOT_INV_NOT_fn_alu_op1__ETC___d309' from process `\module_fn_alu.$proc$module_fn_alu.v:341$64'.
+No latch inferred for signal `\module_fn_alu.\final_output__h56' from process `\module_fn_alu.$proc$module_fn_alu.v:317$61'.
+No latch inferred for signal `\module_fn_alu.\branch_taken__h48' from process `\module_fn_alu.$proc$module_fn_alu.v:303$58'.
+No latch inferred for signal `\module_fn_alu.\shin__h52' from process `\module_fn_alu.$proc$module_fn_alu.v:232$57'.
+
+2.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\module_fn_alu.$proc$module_fn_alu.v:341$64'.
+Removing empty process `module_fn_alu.$proc$module_fn_alu.v:341$64'.
+Found and cleaned up 1 empty switch in `\module_fn_alu.$proc$module_fn_alu.v:317$61'.
+Removing empty process `module_fn_alu.$proc$module_fn_alu.v:317$61'.
+Found and cleaned up 1 empty switch in `\module_fn_alu.$proc$module_fn_alu.v:303$58'.
+Removing empty process `module_fn_alu.$proc$module_fn_alu.v:303$58'.
+Found and cleaned up 1 empty switch in `\module_fn_alu.$proc$module_fn_alu.v:232$57'.
+Removing empty process `module_fn_alu.$proc$module_fn_alu.v:232$57'.
+Cleaned up 4 empty switches.
+
+2.3. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+<suppressed ~5 debug messages>
+
+2.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+Removed 0 unused cells and 32 unused wires.
+<suppressed ~1 debug messages>
+
+2.5. Executing CHECK pass (checking for obvious problems).
+checking module module_fn_alu..
+found and reported 0 problems.
+
+2.6. Executing OPT pass (performing simple optimizations).
+
+2.6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+2.6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+<suppressed ~54 debug messages>
+Removed a total of 18 cells.
+
+2.6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \module_fn_alu..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+2.6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \module_fn_alu.
+    New input vector for $reduce_or cell $procmux$80_ANY: { $procmux$80_CMP [0] $procmux$80_CMP [1] }
+    New input vector for $reduce_or cell $procmux$78_ANY: { $procmux$78_CMP [0] $procmux$78_CMP [1] }
+    New input vector for $reduce_or cell $procmux$75_ANY: { $procmux$70_CMP [0] $procmux$70_CMP [1] $procmux$75_CMP [1] $procmux$75_CMP [3] }
+    New input vector for $reduce_or cell $procmux$70_ANY: { $procmux$70_CMP [0] $procmux$70_CMP [1] }
+  Optimizing cells in module \module_fn_alu.
+Performed a total of 4 changes.
+
+2.6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+Removed a total of 0 cells.
+
+2.6.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+Removed 0 unused cells and 14 unused wires.
+<suppressed ~1 debug messages>
+
+2.6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+2.6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \module_fn_alu..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~6 debug messages>
+
+2.6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \module_fn_alu.
+Performed a total of 0 changes.
+
+2.6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+Removed a total of 0 cells.
+
+2.6.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+
+2.6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+2.6.16. Finished OPT passes. (There is nothing left to do.)
+
+2.7. Executing WREDUCE pass (reducing word size of cells).
+Removed top 1 bits (of 65) from port Y of cell module_fn_alu.$or$module_fn_alu.v:140$32 ($or).
+Removed top 1 bits (of 65) from port A of cell module_fn_alu.$or$module_fn_alu.v:140$32 ($or).
+Removed top 1 bits (of 65) from port B of cell module_fn_alu.$or$module_fn_alu.v:140$32 ($or).
+Removed top 1 bits (of 4) from port B of cell module_fn_alu.$ne$module_fn_alu.v:125$9 ($ne).
+Removed top 2 bits (of 4) from port B of cell module_fn_alu.$ne$module_fn_alu.v:125$10 ($ne).
+Removed top 2 bits (of 4) from port B of cell module_fn_alu.$ne$module_fn_alu.v:126$12 ($ne).
+Removed top 1 bits (of 4) from port B of cell module_fn_alu.$eq$module_fn_alu.v:135$20 ($eq).
+Removed top 2 bits (of 4) from port B of cell module_fn_alu.$eq$module_fn_alu.v:135$21 ($eq).
+Removed top 2 bits (of 4) from port B of cell module_fn_alu.$eq$module_fn_alu.v:136$23 ($eq).
+Removed top 1 bits (of 65) from port Y of cell module_fn_alu.$shr$module_fn_alu.v:138$28 ($shr).
+Removed top 1 bits (of 65) from port Y of cell module_fn_alu.$and$module_fn_alu.v:140$31 ($and).
+Removed top 1 bits (of 65) from port A of cell module_fn_alu.$and$module_fn_alu.v:140$31 ($and).
+Removed top 1 bits (of 65) from port B of cell module_fn_alu.$and$module_fn_alu.v:140$31 ($and).
+Removed top 61 bits (of 64) from mux cell module_fn_alu.$ternary$module_fn_alu.v:148$43 ($mux).
+Removed top 61 bits (of 64) from port B of cell module_fn_alu.$add$module_fn_alu.v:151$46 ($add).
+Removed top 2 bits (of 4) from port B of cell module_fn_alu.$procmux$71_CMP0 ($eq).
+Removed top 2 bits (of 4) from port B of cell module_fn_alu.$procmux$72_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell module_fn_alu.$procmux$76_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell module_fn_alu.$procmux$77_CMP0 ($eq).
+Removed top 1 bits (of 4) from port B of cell module_fn_alu.$procmux$78_CMP0 ($eq).
+Removed top 3 bits (of 4) from port B of cell module_fn_alu.$procmux$79_CMP0 ($eq).
+Removed top 1 bits (of 65) from port Y of cell module_fn_alu.$not$module_fn_alu.v:139$30 ($not).
+Removed top 1 bits (of 65) from port A of cell module_fn_alu.$not$module_fn_alu.v:139$30 ($not).
+Removed top 1 bits (of 65) from port Y of cell module_fn_alu.$shr$module_fn_alu.v:139$29 ($shr).
+Removed top 1 bits (of 65) from wire module_fn_alu.$and$module_fn_alu.v:140$31_Y.
+Removed top 39 bits (of 65) from wire module_fn_alu.$not$module_fn_alu.v:139$30_Y.
+Removed top 1 bits (of 65) from wire module_fn_alu.$shr$module_fn_alu.v:138$28_Y.
+Removed top 1 bits (of 65) from wire module_fn_alu.$shr$module_fn_alu.v:139$29_Y.
+Removed top 1 bits (of 65) from wire module_fn_alu.fn_alu_fn_BIT_3_2_AND_IF_fn_alu_fn_EQ_5_9_OR_f_ETC___d194.
+Removed top 61 bits (of 64) from wire module_fn_alu.incr_value__h59.
+
+2.8. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+Removed 0 unused cells and 6 unused wires.
+<suppressed ~1 debug messages>
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+2.11.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+
+2.11.5. Finished fast OPT passes.
+
+2.12. Printing statistics.
+
+=== module_fn_alu ===
+
+   Number of wires:                 87
+   Number of wire bits:           1945
+   Number of public wires:          39
+   Number of public wire bits:    1382
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 75
+     $add                            2
+     $and                            6
+     $eq                            15
+     $logic_and                     10
+     $logic_not                      6
+     $logic_or                       6
+     $lt                             1
+     $mux                            5
+     $ne                             5
+     $not                            3
+     $or                             2
+     $pmux                           3
+     $reduce_bool                    1
+     $reduce_or                      4
+     $shr                            2
+     $xor                            4
+
+2.13. Executing CHECK pass (checking for obvious problems).
+checking module module_fn_alu..
+found and reported 0 problems.
+
+3. Executing Verilog-2005 frontend: synth_alu.v
+Parsing Verilog input from `synth_alu.v' to AST representation.
+Generating RTLIL representation for module `\module_fn_alu'.
+Successfully finished Verilog frontend.
+
+4. Executing Liberty frontend.
+Ignoring cell CLKGATETST_X1 with missing function on output IQ.
+Ignoring cell CLKGATETST_X2 with missing function on output IQ.
+Ignoring cell CLKGATETST_X4 with missing function on output IQ.
+Ignoring cell CLKGATETST_X8 with missing function on output IQ.
+Ignoring cell CLKGATE_X1 with missing function on output IQ.
+Ignoring cell CLKGATE_X2 with missing function on output IQ.
+Ignoring cell CLKGATE_X4 with missing function on output IQ.
+Ignoring cell CLKGATE_X8 with missing function on output IQ.
+Imported 127 cell types from liberty file.
+
+5. Executing PREP pass.
+
+5.1. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1.1. Analyzing design hierarchy..
+Top module:  \module_fn_alu
+Used module:     \OAI21_X1
+Used module:     \AOI221_X1
+Used module:     \OAI211_X1
+Used module:     \NAND3_X1
+Used module:     \XOR2_X1
+Used module:     \NAND2_X1
+Used module:     \AOI21_X1
+Used module:     \OAI221_X1
+Used module:     \XNOR2_X1
+Used module:     \AOI211_X1
+Used module:     \NOR2_X1
+Used module:     \OR2_X1
+Used module:     \NAND4_X1
+Used module:     \AND3_X1
+Used module:     \INV_X1
+Used module:     \AND2_X1
+Used module:     \AOI22_X1
+Used module:     \OR3_X1
+Used module:     \OAI22_X1
+Used module:     \NOR3_X1
+Used module:     \MUX2_X1
+Used module:     \AOI222_X1
+Used module:     \NOR4_X1
+Used module:     \OAI222_X1
+Used module:     \OAI33_X1
+Used module:     \AND4_X1
+Used module:     \OR4_X1
+
+5.1.2. Analyzing design hierarchy..
+Top module:  \module_fn_alu
+Used module:     \OAI21_X1
+Used module:     \AOI221_X1
+Used module:     \OAI211_X1
+Used module:     \NAND3_X1
+Used module:     \XOR2_X1
+Used module:     \NAND2_X1
+Used module:     \AOI21_X1
+Used module:     \OAI221_X1
+Used module:     \XNOR2_X1
+Used module:     \AOI211_X1
+Used module:     \NOR2_X1
+Used module:     \OR2_X1
+Used module:     \NAND4_X1
+Used module:     \AND3_X1
+Used module:     \INV_X1
+Used module:     \AND2_X1
+Used module:     \AOI22_X1
+Used module:     \OR3_X1
+Used module:     \OAI22_X1
+Used module:     \NOR3_X1
+Used module:     \MUX2_X1
+Used module:     \AOI222_X1
+Used module:     \NOR4_X1
+Used module:     \OAI222_X1
+Used module:     \OAI33_X1
+Used module:     \AND4_X1
+Used module:     \OR4_X1
+Removing unused module `\XOR2_X2'.
+Removing unused module `\XNOR2_X2'.
+Removing unused module `\TLAT_X1'.
+Removing unused module `\TINV_X1'.
+Removing unused module `\TBUF_X16'.
+Removing unused module `\TBUF_X8'.
+Removing unused module `\TBUF_X4'.
+Removing unused module `\TBUF_X2'.
+Removing unused module `\TBUF_X1'.
+Removing unused module `\SDFF_X2'.
+Removing unused module `\SDFF_X1'.
+Removing unused module `\SDFFS_X2'.
+Removing unused module `\SDFFS_X1'.
+Removing unused module `\SDFFR_X2'.
+Removing unused module `\SDFFR_X1'.
+Removing unused module `\SDFFRS_X2'.
+Removing unused module `\SDFFRS_X1'.
+Removing unused module `\OR4_X4'.
+Removing unused module `\OR4_X2'.
+Removing unused module `\OR3_X4'.
+Removing unused module `\OR3_X2'.
+Removing unused module `\OR2_X4'.
+Removing unused module `\OR2_X2'.
+Removing unused module `\OAI222_X4'.
+Removing unused module `\OAI222_X2'.
+Removing unused module `\OAI221_X4'.
+Removing unused module `\OAI221_X2'.
+Removing unused module `\OAI211_X4'.
+Removing unused module `\OAI211_X2'.
+Removing unused module `\OAI22_X4'.
+Removing unused module `\OAI22_X2'.
+Removing unused module `\OAI21_X4'.
+Removing unused module `\OAI21_X2'.
+Removing unused module `\NOR4_X4'.
+Removing unused module `\NOR4_X2'.
+Removing unused module `\NOR3_X4'.
+Removing unused module `\NOR3_X2'.
+Removing unused module `\NOR2_X4'.
+Removing unused module `\NOR2_X2'.
+Removing unused module `\NAND4_X4'.
+Removing unused module `\NAND4_X2'.
+Removing unused module `\NAND3_X4'.
+Removing unused module `\NAND3_X2'.
+Removing unused module `\NAND2_X4'.
+Removing unused module `\NAND2_X2'.
+Removing unused module `\MUX2_X2'.
+Removing unused module `\LOGIC1_X1'.
+Removing unused module `\LOGIC0_X1'.
+Removing unused module `\INV_X32'.
+Removing unused module `\INV_X16'.
+Removing unused module `\INV_X8'.
+Removing unused module `\INV_X4'.
+Removing unused module `\INV_X2'.
+Removing unused module `\HA_X1'.
+Removing unused module `\FILLCELL_X32'.
+Removing unused module `\FILLCELL_X16'.
+Removing unused module `\FILLCELL_X8'.
+Removing unused module `\FILLCELL_X4'.
+Removing unused module `\FILLCELL_X2'.
+Removing unused module `\FILLCELL_X1'.
+Removing unused module `\WELLTAP_X1'.
+Removing unused module `\FA_X1'.
+Removing unused module `\DLL_X2'.
+Removing unused module `\DLL_X1'.
+Removing unused module `\DLH_X2'.
+Removing unused module `\DLH_X1'.
+Removing unused module `\DFF_X2'.
+Removing unused module `\DFF_X1'.
+Removing unused module `\DFFS_X2'.
+Removing unused module `\DFFS_X1'.
+Removing unused module `\DFFR_X2'.
+Removing unused module `\DFFR_X1'.
+Removing unused module `\DFFRS_X2'.
+Removing unused module `\DFFRS_X1'.
+Removing unused module `\CLKBUF_X3'.
+Removing unused module `\CLKBUF_X2'.
+Removing unused module `\CLKBUF_X1'.
+Removing unused module `\BUF_X32'.
+Removing unused module `\BUF_X16'.
+Removing unused module `\BUF_X8'.
+Removing unused module `\BUF_X4'.
+Removing unused module `\BUF_X2'.
+Removing unused module `\BUF_X1'.
+Removing unused module `\AOI222_X4'.
+Removing unused module `\AOI222_X2'.
+Removing unused module `\AOI221_X4'.
+Removing unused module `\AOI221_X2'.
+Removing unused module `\AOI211_X4'.
+Removing unused module `\AOI211_X2'.
+Removing unused module `\AOI22_X4'.
+Removing unused module `\AOI22_X2'.
+Removing unused module `\AOI21_X4'.
+Removing unused module `\AOI21_X2'.
+Removing unused module `\ANTENNA_X1'.
+Removing unused module `\AND4_X4'.
+Removing unused module `\AND4_X2'.
+Removing unused module `\AND3_X4'.
+Removing unused module `\AND3_X2'.
+Removing unused module `\AND2_X4'.
+Removing unused module `\AND2_X2'.
+Removed 100 unused modules.
+
+5.2. Executing PROC pass (convert processes to netlists).
+
+5.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.2.3. Executing PROC_INIT pass (extract init attributes).
+
+5.2.4. Executing PROC_ARST pass (detect async resets in processes).
+
+5.2.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.2.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.2.7. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.2.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.3. Executing FLATTEN pass (flatten design).
+Using template INV_X1 for cells of type INV_X1.
+Using template NOR2_X1 for cells of type NOR2_X1.
+Using template AOI21_X1 for cells of type AOI21_X1.
+Using template OAI211_X1 for cells of type OAI211_X1.
+Using template NOR4_X1 for cells of type NOR4_X1.
+Using template NAND2_X1 for cells of type NAND2_X1.
+Using template NOR3_X1 for cells of type NOR3_X1.
+Using template XNOR2_X1 for cells of type XNOR2_X1.
+Using template OR2_X1 for cells of type OR2_X1.
+Using template XOR2_X1 for cells of type XOR2_X1.
+Using template OAI21_X1 for cells of type OAI21_X1.
+Using template NAND4_X1 for cells of type NAND4_X1.
+Using template NAND3_X1 for cells of type NAND3_X1.
+Using template OR4_X1 for cells of type OR4_X1.
+Using template OR3_X1 for cells of type OR3_X1.
+Using template AND4_X1 for cells of type AND4_X1.
+Using template AND2_X1 for cells of type AND2_X1.
+Using template AOI22_X1 for cells of type AOI22_X1.
+Using template AND3_X1 for cells of type AND3_X1.
+Using template AOI221_X1 for cells of type AOI221_X1.
+Using template OAI221_X1 for cells of type OAI221_X1.
+Using template AOI211_X1 for cells of type AOI211_X1.
+Using template OAI222_X1 for cells of type OAI222_X1.
+Using template MUX2_X1 for cells of type MUX2_X1.
+Using template OAI33_X1 for cells of type OAI33_X1.
+Using template OAI22_X1 for cells of type OAI22_X1.
+Using template AOI222_X1 for cells of type AOI222_X1.
+<suppressed ~2143 debug messages>
+No more expansions possible.
+Deleting now unused module OR2_X1.
+Deleting now unused module MUX2_X1.
+Deleting now unused module NOR4_X1.
+Deleting now unused module XOR2_X1.
+Deleting now unused module AOI222_X1.
+Deleting now unused module OAI211_X1.
+Deleting now unused module NOR3_X1.
+Deleting now unused module AOI221_X1.
+Deleting now unused module OAI33_X1.
+Deleting now unused module OR3_X1.
+Deleting now unused module AOI211_X1.
+Deleting now unused module NOR2_X1.
+Deleting now unused module INV_X1.
+Deleting now unused module AOI22_X1.
+Deleting now unused module OAI222_X1.
+Deleting now unused module OAI22_X1.
+Deleting now unused module AOI21_X1.
+Deleting now unused module NAND4_X1.
+Deleting now unused module OR4_X1.
+Deleting now unused module XNOR2_X1.
+Deleting now unused module AND4_X1.
+Deleting now unused module NAND3_X1.
+Deleting now unused module OAI21_X1.
+Deleting now unused module AND3_X1.
+Deleting now unused module OAI221_X1.
+Deleting now unused module NAND2_X1.
+Deleting now unused module AND2_X1.
+
+5.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+<suppressed ~187 debug messages>
+
+5.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+Removed 13 unused cells and 4368 unused wires.
+<suppressed ~40 debug messages>
+
+5.6. Executing CHECK pass (checking for obvious problems).
+checking module module_fn_alu..
+found and reported 0 problems.
+
+5.7. Executing OPT pass (performing simple optimizations).
+
+5.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+5.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+<suppressed ~519 debug messages>
+Removed a total of 173 cells.
+
+5.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \module_fn_alu..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \module_fn_alu.
+Performed a total of 0 changes.
+
+5.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+Removed a total of 0 cells.
+
+5.7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+5.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+Removed 0 unused cells and 173 unused wires.
+<suppressed ~1 debug messages>
+
+5.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+5.7.9. Finished OPT passes. (There is nothing left to do.)
+
+5.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 62 bits (of 64) from wire module_fn_alu.incr_value__h59.
+Removed top 1 bits (of 6) from wire module_fn_alu.shift_amt__h49.
+Removed top 32 bits (of 64) from wire module_fn_alu.shift_inright__h51.
+
+5.9. Executing MEMORY_DFF pass (merging $dff cells to $memrd and $memwr).
+
+5.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~2 debug messages>
+
+5.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.12. Executing OPT pass (performing simple optimizations).
+
+5.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module module_fn_alu.
+
+5.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\module_fn_alu'.
+Removed a total of 0 cells.
+
+5.12.3. Executing OPT_RMDFF pass (remove dff with constant values).
+
+5.12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \module_fn_alu..
+
+5.12.5. Finished fast OPT passes.
+
+5.13. Printing statistics.
+
+=== module_fn_alu ===
+
+   Number of wires:              11005
+   Number of wire bits:          11903
+   Number of public wires:        7844
+   Number of public wire bits:    8742
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               5291
+     $_AND_                       1974
+     $_NOT_                       1525
+     $_OR_                        1468
+     $_XOR_                        324
+
+5.14. Executing CHECK pass (checking for obvious problems).
+checking module module_fn_alu..
+found and reported 0 problems.
+
+6. Executing EQUIV_MAKE pass (creating equiv checking module).
