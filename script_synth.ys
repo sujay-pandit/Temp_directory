@@ -2,7 +2,7 @@
 PDK=sky130_fd_sc_hvl__tt_100C_3v30.lib
 
 yosys -l synth_core.log -p "
-read_verilog *.v;
+read_verilog ./verilog/*.v;
 hierarchy -check -top mkccore_axi4;
 proc; opt; fsm; opt; memory; opt;
 techmap; opt;
@@ -13,7 +13,7 @@ write_verilog -noattr synth_core.yv
 "
 #
 yosys -l synth_alu.log -p "
-read_verilog module_fn_alu.v;
+read_verilog ./verilog/module_fn_alu.v;
 hierarchy -check -top module_fn_alu;
 proc; opt; fsm; opt; memory; opt;
 techmap; opt;

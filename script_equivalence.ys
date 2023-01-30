@@ -4,7 +4,7 @@ PDK=sky130_fd_sc_hvl__tt_100C_3v30.lib
 yosys -l check_core.log -p "
 
     # gold design
-    read_verilog module_fn_alu.v
+    read_verilog ./verilog/module_fn_alu.v
     prep -flatten -top module_fn_alu
     design -stash gold
     
