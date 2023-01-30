@@ -1,10 +1,10 @@
-# sdf example
-read_liberty ./skywater_130nm.lib
+log_begin timingpower.log
+read_liberty sky130_fd_sc_hvl__tt_100C_3v30.lib
 read_verilog synth_core.yv
 link_design mkccore_axi4
-#read_verilog synth_alu.yv
-#link_design module_fn_alu
-create_clock -name clk -period 5000 {CLK}
-#set_input_delay -clock clk 0 {in1 in2}
+create_clock -name clk -period 4000 {CLK}
+elapsed_run_time
 report_checks
 report_power
+log_end
+exit

@@ -1,6 +1,5 @@
  #!/bin/bash
-#PDK=./freepdk_45nm.lib
-PDK=./skywater_130nm.lib
+PDK=sky130_fd_sc_hvl__tt_100C_3v30.lib
 
 yosys -l check_core.log -p "
 
