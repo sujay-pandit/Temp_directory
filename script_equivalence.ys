@@ -1,5 +1,5 @@
  #!/bin/bash
-PDK=sky130_fd_sc_hvl__tt_100C_3v30.lib
+PDK=./lib/sky130_fd_sc_hvl__tt_100C_3v30.lib
 
 yosys -l check_core.log -p "
 
