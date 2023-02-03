@@ -1,5 +1,5 @@
  #!/bin/bash
-PDK=./lib/sky130_fd_sc_hvl__tt_100C_3v30.lib
+LIB_NAME=./lib/sky130_fd_sc_hvl__tt_100C_3v30.lib
 
 yosys -l check_core.log -p "
 
@@ -10,7 +10,7 @@ yosys -l check_core.log -p "
     
     # gate design
     read_verilog synth_alu.yv
-    read_liberty  -ignore_miss_func $PDK
+    read_liberty  -ignore_miss_func $LIB_NAME
     prep -flatten -top module_fn_alu
     design -stash gate
     

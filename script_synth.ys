@@ -1,13 +1,13 @@
  #!/bin/bash
-PDK=./lib/sky130_fd_sc_hvl__tt_100C_3v30.lib
+LIB_NAME=./lib/sky130_fd_sc_hvl__tt_100C_3v30.lib
 
 yosys -l synth_core.log -p "
 read_verilog ./verilog/*.v;
 hierarchy -check -top mkccore_axi4;
 proc; opt; fsm; opt; memory; opt;
 techmap; opt;
-dfflibmap -liberty $PDK;
-abc -liberty $PDK;
+dfflibmap -liberty $LIB_NAME;
+abc -liberty $LIB_NAME;
 clean;
 write_verilog -noattr synth_core.yv
 "
@@ -17,8 +17,8 @@ read_verilog ./verilog/module_fn_alu.v;
 hierarchy -check -top module_fn_alu;
 proc; opt; fsm; opt; memory; opt;
 techmap; opt;
-dfflibmap -liberty $PDK ; 
-abc -liberty $PDK ;
+dfflibmap -liberty $LIB_NAME ; 
+abc -liberty $LIB_NAME ;
 clean;
 write_verilog -noattr synth_alu.yv
 "
