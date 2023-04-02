@@ -20,7 +20,7 @@ yosys -l check_core.log -p "
     design -copy-from gate -as gate module_fn_alu
     equiv_make gold gate equiv
     hierarchy -top equiv
-    #show
+    #show -pause
     equiv_simple  -v
     equiv_status -assert
 "
